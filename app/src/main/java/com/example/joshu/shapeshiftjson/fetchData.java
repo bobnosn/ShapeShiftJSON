@@ -13,46 +13,77 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-/**
- * Created by Josh Gerber on 9/15/2017.
- */
+class fetchData extends AsyncTask<Void, Void, Void> {
+    private String data = "";
+    private String coins = "";
+    private String dataParsed = "";
 
-public class fetchData extends AsyncTask<Void,Void,Void> {
-    String data = "";
-    String dataParsed = "";
-    String singleParsed = "";
+
+    static List<String> coinsList = new ArrayList<>();
+    //URL url = new URL("https://shapeshift.io/rate/eth_xmr");
+    private URL url; //url = new URL("https://shapeshift.io/getcoins");
+    //URL url = new URL("https://shapeshift.io/recenttx/10");
 
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            URL url = new URL("https://shapeshift.io/rate/eth_xmr");
-            //URL url = new URL("https://shapeshift.io/recenttx/10");
+            BufferedReader coinReader = setUpWebComponents(new URL("https://shapeshift.io/getcoins"));
+            BufferedReader urlReader = setUpWebComponents(new URL("https://shapeshift.io/recenttx/10"));
+            url = new URL("https://shapeshift.io/recenttx/10");
 
-            //Setup to read from URL
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = "";
-            /*while (line != null) {
-                line = bufferedReader.readLine();
-                data = data + line;
+            String line;
 
-                System.out.println(data);
-            }*/
-            for (line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+            for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
                 data = data+line;
                 System.out.println("Data: "+data);
             }
 
-            //br.close();
+            for (line = coinReader.readLine(); line != null; line = coinReader.readLine()) {
+                coins = coins + line;
+                System.out.println("COINS: " + coins);
+            }
+            coins = "[" + coins + "]";
 
-            //JSONArray JA = new JSONArray(data);
-            //System.out.println(url);
-            //System.out.println("JSONArray: "+JA);
-            //System.out.println("JSONArray.length: "+JA.length());
+            JSONArray coinArray = new JSONArray(coins);
 
-            switch(url.toString()){
+            //Adding each coin key (symbol) from coinArray to coinsList
+            for (int i = 0; i < coinArray.length(); i++) {
+                JSONObject coins = coinArray.getJSONObject(i);
+                Iterator key = coins.keys();
+                while (key.hasNext()) {
+                    String k = key.next().toString();
+                    System.out.println("Key.next(): " + k);
+                    coinsList.add(i, k);
+                    //System.out.println("Key : " + k + ", value : " + objects.getString(k));
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //br.close();
+
+    private BufferedReader setUpWebComponents(URL urll) {
+        BufferedReader bufferedReader = null;
+        try {
+            HttpURLConnection httpURLConnection = (HttpURLConnection) urll.openConnection();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bufferedReader;
+    }
+
+    private void getData() {
+        String singleParsed = null;
+        try {
+            switch (url.toString()) {
                 case "https://shapeshift.io/recenttx/10":
                     JSONArray JA = new JSONArray(data);
                     for (int i = 0; i < JA.length(); i++) {
@@ -65,36 +96,34 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
                         dataParsed = dataParsed + singleParsed + "\n";
                     }
                     break;
+
                 case "https://shapeshift.io/rate/eth_xmr":
                     //For some reason, the JSON contents aren't surrounded by square brackets when the data doesn't contain a list
-                    data = "["+data+"]";
+                    data = "[" + data + "]";
                     JA = new JSONArray(data); //Set the JA JSONArray to the contents of the data variable
                     JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
 
                     singleParsed = "pair: " + JO.get("pair") + "\n" +
                             "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
                     dataParsed = dataParsed + singleParsed + "\n";
-
                     break;
                 default:
                     break;
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return null;
+        MainActivity.jsonData.setText(this.dataParsed);
+        //return dataParsed;
     }
+
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        MainActivity.jsonData.setText(this.dataParsed);
+        getData();
+        //MainActivity.jsonData.setText(this.dataParsed);
 
     }
 }
