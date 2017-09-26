@@ -38,8 +38,8 @@ class fetchData extends AsyncTask<Void, Void, Void> {
             String line;
 
             for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
-                data = data+line;
-                System.out.println("Data: "+data);
+                data = data + line;
+                System.out.println("Data: " + data);
             }
 
             for (line = coinReader.readLine(); line != null; line = coinReader.readLine()) {
@@ -51,16 +51,17 @@ class fetchData extends AsyncTask<Void, Void, Void> {
             JSONArray coinArray = new JSONArray(coins);
 
             //Adding each coin key (symbol) from coinArray to coinsList
-            for (int i = 0; i < coinArray.length(); i++) {
-                JSONObject coins = coinArray.getJSONObject(i);
-                Iterator key = coins.keys();
-                while (key.hasNext()) {
-                    String k = key.next().toString();
-                    System.out.println("Key.next(): " + k);
-                    coinsList.add(i, k);
-                    //System.out.println("Key : " + k + ", value : " + objects.getString(k));
-                }
+
+            JSONObject coins = coinArray.getJSONObject(0);
+            Iterator key = coins.keys();
+            while (key.hasNext()) {
+                String k = key.next().toString();
+                System.out.println("Key.next(): " + k);
+                coinsList.add(0, k);
+                //System.out.println("Key : " + k + ", value : " + objects.getString(k));
             }
+
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

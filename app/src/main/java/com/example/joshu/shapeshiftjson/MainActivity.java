@@ -1,5 +1,6 @@
 package com.example.joshu.shapeshiftjson;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     Button showJSONData;
     public static TextView jsonData;
+    static ArrayAdapter<String> dataAdapter;
+    Spinner currencyIn, currencyOut;
 
 
     @Override
@@ -20,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Spinner currencyIn = (Spinner) findViewById(R.id.currencyIn);
-        Spinner currencyOut = (Spinner) findViewById(R.id.currencyOut);
+        currencyIn = (Spinner) findViewById(R.id.currencyIn);
+        currencyOut = (Spinner) findViewById(R.id.currencyOut);
 
         currencyIn.setOnItemSelectedListener(this);
         currencyOut.setOnItemSelectedListener(this);
@@ -30,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         jsonData = (TextView) findViewById(R.id.fetcheddata);
 
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, fetchData.coinsList);
+        dataAdapter = new ArrayAdapter<>(this, R.layout.item_spinner, fetchData.coinsList);
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -52,11 +55,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
-        String item = fetchData.coinsList.get(position);
 
-        System.out.println(fetchData.coinsList.get(position));
         // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+        Toast.makeText(parent.getContext(), "Selected: " + view.toString(), Toast.LENGTH_LONG).show();
 
     }
 
