@@ -1,6 +1,5 @@
 package com.example.joshu.shapeshiftjson;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,17 +19,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-    Button showJSONData;
+
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    Button showJSONData, populateButton;
     public TextView jsonData;
     ArrayAdapter<String> dataAdapter;
     Spinner currencyIn, currencyOut;
-
+    String curIn, curOut;
+    private URL url;
+    private String data, dataParsed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +46,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         currencyIn.setOnItemSelectedListener(this);
         currencyOut.setOnItemSelectedListener(this);
 
+        populateButton = (Button) findViewById(R.id.populateButton);
         showJSONData = (Button) findViewById(R.id.button);
         jsonData = (TextView) findViewById(R.id.fetcheddata);
 
-        showJSONData.setOnClickListener(new View.OnClickListener() {
+        populateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fetchData process = new fetchData();
                 process.execute();
+            }
+        });
+        showJSONData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCoinRate getCoinRate = new getCoinRate();
+                getCoinRate.execute();
             }
         });
 
@@ -74,13 +84,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
-        switch(parent.getId()){
+        switch (parent.getId()) {
             case R.id.currencyIn:
-                System.out.println("CURRENCYIN");
+                curIn = parent.getItemAtPosition(position).toString();
+                System.out.println(curIn);
                 break;
             case R.id.currencyOut:
-                System.out.println("CURRENCYOUT");
+                curOut = parent.getItemAtPosition(position).toString();
+                System.out.println(curOut);
                 break;
+        }
+        try {
+            url = new URL("https://shapeshift.io/rate/" + curIn + "_" + curOut);
+            System.out.println(url.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
 
     }
@@ -90,30 +108,80 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    class fetchData extends AsyncTask<Void, Void, Void> {
-        private String data = "";
+    private void parseData() {
+        //data = getSpecificRate();
+        String singleParsed;
+        JSONArray JA;
+        try {
+            data = getSpecificRate();
+
+            data = "[" + data + "]";
+            JA = new JSONArray(data);
+
+            JA = new JSONArray(data); //Set the JA JSONArray to the contents of the data variable
+            JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
+
+            singleParsed = "pair: " + JO.get("pair") + "\n" +
+                    "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
+            dataParsed = dataParsed + singleParsed + "\n";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getSpecificRate() {
+        String line;
+        if(data!=null) data = null;
+        BufferedReader urlReader = setUpWebComponents(url);
+        try {
+
+            for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
+                if (data!=null) data = data + line;
+                else data = line;
+                System.out.println("Data: " + data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    private BufferedReader setUpWebComponents(URL urll) {
+        BufferedReader bufferedReader = null;
+        try {
+            HttpURLConnection httpURLConnection = (HttpURLConnection) urll.openConnection();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bufferedReader;
+    }
+
+    private class fetchData extends AsyncTask<Void, Void, Void> {
+        //private String data = "";
         private String coins = "";
-        private String dataParsed = "";
+        //private String dataParsed = "";
 
 
         List<String> coinsList = new ArrayList<>();
         //URL url = new URL("https://shapeshift.io/rate/eth_xmr");
-        private URL url; //url = new URL("https://shapeshift.io/getcoins");
+        // private URL url; //url = new URL("https://shapeshift.io/getcoins");
         //URL url = new URL("https://shapeshift.io/recenttx/10");
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
                 BufferedReader coinReader = setUpWebComponents(new URL("https://shapeshift.io/getcoins"));
-                BufferedReader urlReader = setUpWebComponents(new URL("https://shapeshift.io/recenttx/10"));
-                url = new URL("https://shapeshift.io/recenttx/10");
+                //BufferedReader urlReader = setUpWebComponents(new URL("https://shapeshift.io/rate/eth_xmr"));
+                //url = new URL("https://shapeshift.io/recenttx/10");
 
                 String line;
 
-                for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
-                    data = data + line;
-                    System.out.println("Data: " + data);
-                }
+                    /*for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
+                        data = data + line;
+                        System.out.println("Data: " + data);
+                    }*/
 
                 for (line = coinReader.readLine(); line != null; line = coinReader.readLine()) {
                     coins = coins + line;
@@ -142,22 +210,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         //br.close();
 
-        private BufferedReader setUpWebComponents(URL urll) {
-            BufferedReader bufferedReader = null;
-            try {
-                HttpURLConnection httpURLConnection = (HttpURLConnection) urll.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return bufferedReader;
-        }
+/*
+            private void parseData() {
+                String singleParsed = null;
 
-        private void getData() {
-            String singleParsed = null;
-            try {
-                switch (url.toString()) {
                     case "https://shapeshift.io/recenttx/10":
                         JSONArray JA = new JSONArray(data);
                         for (int i = 0; i < JA.length(); i++) {
@@ -168,43 +224,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     "amount: " + JO.get("amount") + "\n";
 
                             dataParsed = dataParsed + singleParsed + "\n";
-                        }
-                        break;
-
-                    case "https://shapeshift.io/rate/eth_xmr":
-                        //For some reason, the JSON contents aren't surrounded by square brackets when the data doesn't contain a list
-                        data = "[" + data + "]";
-                        JA = new JSONArray(data); //Set the JA JSONArray to the contents of the data variable
-                        JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
-
-                        singleParsed = "pair: " + JO.get("pair") + "\n" +
-                                "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
-                        dataParsed = dataParsed + singleParsed + "\n";
-                        break;
-                    default:
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            jsonData.setText(this.dataParsed);
-            //return dataParsed;
-        }
+                        }*/
 
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            getData();
+            //parseData();
             //MainActivity.jsonData.setText(this.dataParsed);
 
             setupAdapter(coinsList);
             dataAdapter.notifyDataSetChanged();
         }
     }
+
+    private class getCoinRate extends AsyncTask<Void, Void, Void> {
+        protected Void doInBackground(Void... voids) {
+            parseData();
+            return null;
+        }
+
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            jsonData.setText(dataParsed);
+
+        }
+    }
 }
-
-
-
-

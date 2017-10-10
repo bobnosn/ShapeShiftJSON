@@ -28,9 +28,10 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click Me!"
-        android:layout_below="@+id/currencyIn"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/currencyOut"
+        android:layout_toLeftOf="@+id/currencyOut"
+        android:layout_toStartOf="@+id/currencyOut"
+        android:text="Rate" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,6 +46,16 @@
             android:padding="5dp"
             android:textSize="24sp" />
     </ScrollView>
+
+    <Button
+        android:id="@+id/populateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button"
+        android:layout_alignBottom="@+id/button"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
+        android:text="Populate" />
 
 
 </RelativeLayout>
