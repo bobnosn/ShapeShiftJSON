@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         showJSONData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCoinRate getCoinRate = new getCoinRate();
-                getCoinRate.execute();
+                coinRate coinRate = new coinRate();
+                coinRate.execute();
             }
         });
 
@@ -142,6 +142,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (urlReader != null) {
+                try {
+                    urlReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return data;
     }
@@ -239,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private class getCoinRate extends AsyncTask<Void, Void, Void> {
+    private class coinRate extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... voids) {
             parseData();
             return null;
