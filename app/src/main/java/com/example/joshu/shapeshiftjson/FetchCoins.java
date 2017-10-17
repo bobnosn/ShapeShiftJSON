@@ -25,8 +25,8 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
     MainActivity activity;
     //URL url = new URL("https://shapeshift.io/recenttx/10");
 
-    public FetchCoins(MainActivity mainActivty){
-        activity = mainActivty;
+    public FetchCoins(MainActivity mainActivity){
+        activity = mainActivity;
     }
 
     @Override
