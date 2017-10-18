@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,41 +15,42 @@ import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button showJSONData, populateButton;
-    public TextView jsonData;
-    ArrayAdapter<String> dataAdapter;
-    Spinner currencyIn, currencyOut;
-    Context uiContext;
+    Button rateButton, populateButton; //Buttons to 1. get and show a rate and 2. populate spinners with coins
+    public TextView jsonData; //Holds the text of the received rate(s)
+    ArrayAdapter<String> dataAdapter; //Adapter for both currencyIn and currencyOut spinners
+    Spinner currencyIn, currencyOut; //Holds all possible coins after being populated by button populateButton
+    Context uiContext; //Context of this (User Interface)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        uiContext = this;
+        uiContext = this; //Sets uiContext to the context for the User Interface
 
         currencyIn = (Spinner) findViewById(R.id.currencyIn);
         currencyOut = (Spinner) findViewById(R.id.currencyOut);
 
+        //Creates CurrencySpinnerListener object (the custom onItemSelectedListener for both spinners) and sets it
         CurrencySpinnerListener csl = new CurrencySpinnerListener();
         currencyIn.setOnItemSelectedListener(csl);
         currencyOut.setOnItemSelectedListener(csl);
 
         populateButton = (Button) findViewById(R.id.populateButton);
-        showJSONData = (Button) findViewById(R.id.button);
+        rateButton = (Button) findViewById(R.id.button);
         jsonData = (TextView) findViewById(R.id.fetcheddata);
 
         populateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FetchCoins process = new FetchCoins(MainActivity.this);
-                process.execute();
+                process.execute(); //Runs doInBackground in FetchCoins to populate the spinners
             }
         });
-        showJSONData.setOnClickListener(new View.OnClickListener() {
+        rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CoinRate coinRate = new CoinRate(MainActivity.this);
-                coinRate.execute();
+                coinRate.execute(); //Runs doInBackground in CoinRate to get a rate between two selected currencies
             }
         });
 

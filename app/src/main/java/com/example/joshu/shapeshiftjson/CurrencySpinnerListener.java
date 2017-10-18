@@ -17,6 +17,7 @@ public class CurrencySpinnerListener implements AdapterView.OnItemSelectedListen
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
+        // Sets the selected value
         switch (parent.getId()) {
             case com.example.joshu.reworkedshapeshiftjson.R.id.currencyIn:
                 curIn = parent.getItemAtPosition(position).toString();
@@ -28,6 +29,7 @@ public class CurrencySpinnerListener implements AdapterView.OnItemSelectedListen
                 break;
         }
         try {
+            // Sets the URL in Internet to the URL to receive a rate between two currencies
             Internet.url = new URL("https://shapeshift.io/rate/" + curIn + "_" + curOut);
             System.out.println(internet.url.toString());
         } catch (MalformedURLException e) {

@@ -34,18 +34,19 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
         try {
             BufferedReader coinReader = internet.setUpWebComponents(new URL("https://shapeshift.io/getcoins"));
 
+            //Sets the String coins to every coin from /getcoins on shapeshift
             String line;
-
             for (line = coinReader.readLine(); line != null; line = coinReader.readLine()) {
-                coins = coins + line;
+                if(coins != null) coins = coins + line;
+                else coins = line;
                 System.out.println("COINS: " + coins);
             }
-            coins = "[" + coins + "]";
 
-            JSONArray coinArray = new JSONArray(coins);
+            coins = "[" + coins + "]"; //Encloses the String coins with square brackets to be added to JSONArray
 
-            //Adding each coin key (symbol) from coinArray to coinsList
+            JSONArray coinArray = new JSONArray(coins); //Creates a JSONArray from the String coins
 
+            //Adding each coin (symbol) key from coinArray to coinsList
             JSONObject coins = coinArray.getJSONObject(0);
             Iterator key = coins.keys();
             while (key.hasNext()) {
@@ -65,32 +66,16 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
     }
     //br.close();
 
-/*
-            private void parseData() {
-                String singleParsed = null;
-
-                    case "https://shapeshift.io/recenttx/10":
-                        JSONArray JA = new JSONArray(data);
-                        for (int i = 0; i < JA.length(); i++) {
-                            JSONObject JO = (JSONObject) JA.get(i);
-                            singleParsed = "curIn: " + JO.get("curIn") + "\n" +
-                                    "curOut: " + JO.get("curOut") + "\n" +
-                                    "timestamp: " + JO.get("timestamp") + "\n" +
-                                    "amount: " + JO.get("amount") + "\n";
-
-                            dataParsed = dataParsed + singleParsed + "\n";
-                        }*/
-
-
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        //parseData();
-        //MainActivity.jsonData.setText(this.dataParsed);
+        //If the list is populated, remove the button populateButton
         if(coinsList != null) {
             ((RelativeLayout) activity.populateButton.getParent()).removeView(activity.populateButton);
         }
+
+        //Setup an adapter for the spinners using coinsList and notify the data set has changed
         activity.setupAdapter(coinsList);
         activity.dataAdapter.notifyDataSetChanged();
     }

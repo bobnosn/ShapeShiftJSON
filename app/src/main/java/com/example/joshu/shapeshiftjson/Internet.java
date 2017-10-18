@@ -21,20 +21,18 @@ public class Internet {
     static String dataParsed;
 
     public void parseData() {
-        //data = getSpecificRate();
         String singleParsed;
         JSONArray JA;
         try {
-            data = getSpecificRate();
+            data = getSpecificRate(); //Sets String data to the rate between two currencies returned by getSpecificRate
 
             data = "[" + data + "]";
-            JA = new JSONArray(data);
 
             JA = new JSONArray(data); //Set the JA JSONArray to the contents of the data variable
             JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
 
-            singleParsed = "pair: " + JO.get("pair") + "\n" +
-                    "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
+            singleParsed = "pair: " + JO.get("pair") + "\n" + "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
+
             if (dataParsed != null) {
                 dataParsed = dataParsed + singleParsed + "\n";
             } else {
@@ -50,7 +48,7 @@ public class Internet {
         if(data!=null) data = null;
         BufferedReader urlReader = setUpWebComponents(url);
         try {
-
+            //Gets a rate between two selected currencies from the Spinners currencyIn and currencyOut
             for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
                 if (data!=null) data = data + line;
                 else data = line;
@@ -60,6 +58,7 @@ public class Internet {
             e.printStackTrace();
         } finally {
             if (urlReader != null) {
+                //Closes the urlReader after it has been used
                 try {
                     urlReader.close();
                 } catch (IOException e) {
@@ -71,6 +70,7 @@ public class Internet {
     }
 
     public BufferedReader setUpWebComponents(URL urll) {
+        //Sets up and returns BufferedReader bufferedReader for a specific URL
         BufferedReader bufferedReader = null;
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) urll.openConnection();
