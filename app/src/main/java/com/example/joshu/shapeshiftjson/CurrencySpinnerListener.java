@@ -19,11 +19,11 @@ public class CurrencySpinnerListener implements AdapterView.OnItemSelectedListen
         // On selecting a spinner item
         // Sets the selected value
         switch (parent.getId()) {
-            case com.example.joshu.reworkedshapeshiftjson.R.id.currencyIn:
+            case com.example.joshu.shapeshiftjson.R.id.currencyIn:
                 curIn = parent.getItemAtPosition(position).toString();
                 System.out.println(curIn);
                 break;
-            case com.example.joshu.reworkedshapeshiftjson.R.id.currencyOut:
+            case com.example.joshu.shapeshiftjson.R.id.currencyOut:
                 curOut = parent.getItemAtPosition(position).toString();
                 System.out.println(curOut);
                 break;

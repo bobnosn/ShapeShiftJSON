@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.joshu.reworkedshapeshiftjson.R;
+import com.example.joshu.shapeshiftjson.R;
 
 import java.util.List;
 
