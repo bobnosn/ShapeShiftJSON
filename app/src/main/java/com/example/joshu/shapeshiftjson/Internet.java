@@ -11,16 +11,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by joshu on 10/16/2017.
- */
 
-public class Internet {
+class Internet {
     static URL url;
-    String data;
+    private String data;
     static String dataParsed;
 
-    public void parseData() {
+    void parseData() {
         String singleParsed;
         JSONArray JA;
         try {
@@ -33,25 +30,25 @@ public class Internet {
 
             singleParsed = "pair: " + JO.get("pair") + "\n" + "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
 
-            if (dataParsed != null) {
+            /*if (dataParsed != null) {
                 dataParsed = dataParsed + singleParsed + "\n";
             } else {
                 dataParsed = singleParsed;
-            }
+            }*/
+            dataParsed = dataParsed != null ? dataParsed + singleParsed + "\n" : singleParsed + "\n";
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String getSpecificRate() {
+    private String getSpecificRate() {
         String line;
         if(data!=null) data = null;
         BufferedReader urlReader = setUpWebComponents(url);
         try {
             //Gets a rate between two selected currencies from the Spinners currencyIn and currencyOut
             for (line = urlReader.readLine(); line != null; line = urlReader.readLine()) {
-                if (data!=null) data = data + line;
-                else data = line;
+                data = line;
                 System.out.println("Data: " + data);
             }
         } catch (IOException e) {
@@ -69,11 +66,11 @@ public class Internet {
         return data;
     }
 
-    public BufferedReader setUpWebComponents(URL urll) {
+    BufferedReader setUpWebComponents(URL url) {
         //Sets up and returns BufferedReader bufferedReader for a specific URL
         BufferedReader bufferedReader = null;
         try {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) urll.openConnection();
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         } catch (IOException e) {

@@ -14,18 +14,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by joshu on 10/16/2017.
- */
-
 class FetchCoins extends AsyncTask<Void, Void, Void> {
     private String coins = "";
-    Internet internet = new Internet();
-    List<String> coinsList = new ArrayList<>();
-    MainActivity activity;
+    private Internet internet = new Internet();
+    private List<String> coinsList = new ArrayList<>();
+    private MainActivity activity;
     //URL url = new URL("https://shapeshift.io/recenttx/10");
 
-    public FetchCoins(MainActivity mainActivity){
+    FetchCoins(MainActivity mainActivity){
         activity = mainActivity;
     }
 
@@ -37,8 +33,10 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
             //Sets the String coins to every coin from /getcoins on shapeshift
             String line;
             for (line = coinReader.readLine(); line != null; line = coinReader.readLine()) {
-                if(coins != null) coins = coins + line;
-                else coins = line;
+                /*if(coins != null) coins = coins + line;
+                else coins = line;*/
+                coins = coins != null? coins + line : line;
+
                 System.out.println("COINS: " + coins);
             }
 
@@ -55,8 +53,8 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
                 coinsList.add(0, k);
                 //System.out.println("Key : " + k + ", value : " + objects.getString(k));
             }
-            if(coinsList != null) {
-                //coinReader.close();
+            if (coinsList != null) {
+                coinReader.close();
             }
 
         } catch (IOException | JSONException e) {
@@ -64,7 +62,6 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
         }
         return null;
     }
-    //br.close();
 
     @Override
     protected void onPostExecute(Void aVoid) {

@@ -1,18 +1,13 @@
 package com.example.joshu.shapeshiftjson;
 
-import android.content.Context;
 import android.os.AsyncTask;
-
-/**
- * Created by joshu on 10/16/2017.
- */
 
 // This is really only here because I can't call network operations from MainActivity
 class CoinRate extends AsyncTask<Void, Void, Void> {
-    Internet internet = new Internet();
+    private Internet internet = new Internet();
     private MainActivity activity;
 
-    public CoinRate(MainActivity mainActivity) {
+    CoinRate(MainActivity mainActivity) {
         activity = mainActivity;
     }
 
