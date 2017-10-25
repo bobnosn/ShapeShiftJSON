@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,37 +24,46 @@
         android:textAlignment="center" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/currencyOut"
         android:layout_toLeftOf="@+id/currencyOut"
         android:layout_toStartOf="@+id/currencyOut"
-        android:text="Rate" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/button">
-
-        <TextView
-            android:id="@+id/fetcheddata"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fetched Text Here!!!"
-            android:padding="5dp"
-            android:textSize="24sp" />
-    </ScrollView>
+        android:text="@string/rate" />
 
     <Button
         android:id="@+id/populateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button"
-        android:layout_alignBottom="@+id/button"
-        android:layout_toLeftOf="@+id/button"
-        android:layout_toStartOf="@+id/button"
-        android:text="Populate" />
+        android:layout_alignBaseline="@+id/rate"
+        android:layout_below="@+id/currencyIn"
+        android:layout_toEndOf="@+id/currencyIn"
+        android:layout_toRightOf="@+id/currencyIn"
+        android:text="@string/populate" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rate">
+
+        <TextView
+            android:id="@+id/fetchedData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fetched_text_here"
+            android:padding="5dp"
+            android:textSize="24sp" />
+    </ScrollView>
+
+    <ToggleButton
+        android:id="@+id/favoriteToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/togglebutton"
+        android:layout_alignTop="@+id/currencyOut"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

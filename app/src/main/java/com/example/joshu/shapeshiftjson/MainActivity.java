@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         currencyOut.setOnItemSelectedListener(csl);
 
         populateButton = (Button) findViewById(R.id.populateButton);
-        rateButton = (Button) findViewById(R.id.button);
-        jsonData = (TextView) findViewById(R.id.fetcheddata);
+        rateButton = (Button) findViewById(R.id.rate);
+        jsonData = (TextView) findViewById(R.id.fetchedData);
 
         populateButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShapeShiftJSON</string>
+    <string name="rate">Rate</string>
+    <string name="populate">Populate</string>
+    <string name="fetched_text_here">Fetched Text Here!!!</string>
+    <string name="togglebutton">ToggleButton</string>
 </resources>
