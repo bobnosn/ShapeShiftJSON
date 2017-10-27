@@ -75,5 +75,7 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
         //Setup an adapter for the spinners using coinsList and notify the data set has changed
         activity.setupAdapter(coinsList);
         activity.dataAdapter.notifyDataSetChanged();
+
+        activity.favorite.setEnabled(true);
     }
 }

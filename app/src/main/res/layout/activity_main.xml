@@ -61,9 +61,9 @@
         android:id="@+id/favoriteToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/togglebutton"
         android:layout_alignTop="@+id/currencyOut"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="@string/togglebutton" />
 
 </RelativeLayout>

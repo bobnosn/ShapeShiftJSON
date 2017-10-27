@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> dataAdapter; //Adapter for both currencyIn and currencyOut spinners
     Spinner currencyIn, currencyOut; //Holds all possible coins after being populated by button populateButton
     Context uiContext; //Context of this (User Interface)
+    ToggleButton favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         currencyIn = (Spinner) findViewById(R.id.currencyIn);
         currencyOut = (Spinner) findViewById(R.id.currencyOut);
+
+        favorite = (ToggleButton) findViewById(R.id.favoriteToggleButton);
 
         //Creates CurrencySpinnerListener object (the custom onItemSelectedListener for both spinners) and sets it
         CurrencySpinnerListener csl = new CurrencySpinnerListener();
@@ -52,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                if(currencyIn.getSelectedItem() != null && currencyOut.getSelectedItem() != null) {
+                    if (!favorite.isChecked()) {
+                        favorite.setText("Unchecked");
+                    } else {
+                        favorite.setText("Checked");
+                    }
+                }
+            }
+        });
     }
 
     public void setupAdapter(List<String> receivedArray) {
