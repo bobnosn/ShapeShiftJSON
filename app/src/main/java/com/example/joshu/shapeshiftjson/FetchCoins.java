@@ -1,5 +1,6 @@
 package com.example.joshu.shapeshiftjson;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.widget.RelativeLayout;
 
@@ -18,6 +19,7 @@ class FetchCoins extends AsyncTask<Void, Void, Void> {
     private String coins = "";
     private Internet internet = new Internet();
     private List<String> coinsList = new ArrayList<>();
+    @SuppressLint("StaticFieldLeak")
     private MainActivity activity;
     //URL url = new URL("https://shapeshift.io/recenttx/10");
 

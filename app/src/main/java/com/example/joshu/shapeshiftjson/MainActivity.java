@@ -1,6 +1,7 @@
 package com.example.joshu.shapeshiftjson;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +10,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
 import java.util.List;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     Spinner currencyIn, currencyOut; //Holds all possible coins after being populated by button populateButton
     Context uiContext; //Context of this (User Interface)
     ToggleButton favorite;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +30,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         uiContext = this; //Sets uiContext to the context for the User Interface
 
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
         currencyIn = (Spinner) findViewById(R.id.currencyIn);
         currencyOut = (Spinner) findViewById(R.id.currencyOut);
 
         favorite = (ToggleButton) findViewById(R.id.favoriteToggleButton);
 
         //Creates CurrencySpinnerListener object (the custom onItemSelectedListener for both spinners) and sets it
-        CurrencySpinnerListener csl = new CurrencySpinnerListener();
+        CurrencySpinnerListener csl = new CurrencySpinnerListener(MainActivity.this);
         currencyIn.setOnItemSelectedListener(csl);
         currencyOut.setOnItemSelectedListener(csl);
 
@@ -44,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         populateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FetchCoins process = new FetchCoins(MainActivity.this);
-                process.execute(); //Runs doInBackground in FetchCoins to populate the spinners
+                FetchCoins fetchCoins = new FetchCoins(MainActivity.this);
+                fetchCoins.execute(); //Runs doInBackground in FetchCoins to populate the spinners
             }
         });
         rateButton.setOnClickListener(new View.OnClickListener() {
@@ -61,9 +67,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view){
                 if(currencyIn.getSelectedItem() != null && currencyOut.getSelectedItem() != null) {
                     if (!favorite.isChecked()) {
-                        favorite.setText("Unchecked");
+                        editor.remove(CurrencySpinnerListener.pair);
+                        editor.apply();
                     } else {
-                        favorite.setText("Checked");
+                        editor.putString(CurrencySpinnerListener.pair, CurrencySpinnerListener.pair);
+                        editor.apply();
                     }
                 }
             }

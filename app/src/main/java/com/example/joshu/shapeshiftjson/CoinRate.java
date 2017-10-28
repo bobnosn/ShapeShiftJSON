@@ -1,10 +1,12 @@
 package com.example.joshu.shapeshiftjson;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 // This is really only here because I can't call network operations from MainActivity
 class CoinRate extends AsyncTask<Void, Void, Void> {
     private Internet internet = new Internet();
+    @SuppressLint("StaticFieldLeak")
     private MainActivity activity;
 
     CoinRate(MainActivity mainActivity) {
