@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     static SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
     FavoriteCoinRates_Background getFavorites;
+    ProgressBar favoriteProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         currencyOut = (Spinner) findViewById(R.id.currencyOut);
 
         favorite = (ToggleButton) findViewById(R.id.favoriteToggleButton);
+        favoriteProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         getFavorites = new FavoriteCoinRates_Background(MainActivity.this);
         getFavorites.execute();

@@ -5,12 +5,13 @@ import android.os.AsyncTask;
 
 // This is really only here because I can't call network operations from MainActivity
 class CoinRate extends AsyncTask<Void, Void, Void> {
-    private Internet internet = new Internet();
     @SuppressLint("StaticFieldLeak")
     private MainActivity activity;
+    private Internet internet;
 
     CoinRate(MainActivity mainActivity) {
         activity = mainActivity;
+        internet = new Internet(activity);
     }
 
     protected Void doInBackground(Void... voids) {

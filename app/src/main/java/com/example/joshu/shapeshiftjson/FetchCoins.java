@@ -17,14 +17,14 @@ import java.util.List;
 
 class FetchCoins extends AsyncTask<Void, Void, Void> {
     private String coins = "";
-    private Internet internet = new Internet();
     private List<String> coinsList = new ArrayList<>();
     @SuppressLint("StaticFieldLeak")
     private MainActivity activity;
-    //URL url = new URL("https://shapeshift.io/recenttx/10");
+    private Internet internet;
 
     FetchCoins(MainActivity mainActivity){
         activity = mainActivity;
+        internet = new Internet(activity);
     }
 
     @Override

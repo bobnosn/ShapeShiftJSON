@@ -14,11 +14,12 @@ class CurrencySpinnerListener implements AdapterView.OnItemSelectedListener{
 
     CurrencySpinnerListener(MainActivity a){
         activity = a;
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Map<String, ?> allEntries = activity.sharedPref.getAll();
+        Map<String, ?> allEntries = MainActivity.sharedPref.getAll();
         // On selecting a spinner item
         activity.favorite.setChecked(false);
         // Sets the selected value

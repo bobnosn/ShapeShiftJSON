@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 
 public class FavoriteCoinRates_Background extends AsyncTask<Void, Void, Void> {
-    private Internet internet = new Internet();
     @SuppressLint("StaticFieldLeak")
     private MainActivity activity;
+    private Internet internet;
 
     FavoriteCoinRates_Background(MainActivity mainActivity) {
         activity = mainActivity;
+        internet = new Internet(activity);
     }
 
     protected Void doInBackground(Void... voids) {

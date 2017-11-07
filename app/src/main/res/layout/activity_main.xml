@@ -46,7 +46,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rate">
+        android:layout_below="@id/rate"
+        android:id="@+id/scrollView2">
 
         <TextView
             android:id="@+id/fetchedData"
@@ -65,5 +66,14 @@
         android:layout_centerHorizontal="true"
         android:enabled="false"
         android:text="@string/togglebutton" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/scrollView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.example.joshu.shapeshiftjson;
 
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,53 +20,34 @@ class Internet {
     static URL url;
     private String data;
     static String dataParsed;
-    private final int FAVORITE = 0, RATE = 1;
+    private MainActivity mainActivityContext;
+
+    Internet(MainActivity mainActivity){ mainActivityContext = mainActivity; }
 
     void parseData(int type) {
-        String singleParsed;
-        JSONArray JA;
+
         Map<String, ?> keys = MainActivity.sharedPref.getAll();
+        //If the rates to be gotten are for the favorite rates, iterate through all the shared prefs and make a new URL for each saved pref
+        int FAVORITE = 0, RATE = 1;
+        float i = 1;
         if (type == FAVORITE) {
             try {
                 for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                    mainActivityContext.favoriteProgressBar.setProgress((int)((i/keys.size())*100));
                     url = new URL("https://shapeshift.io/rate/" + entry.getKey());
-                    data = getSpecificRate();
-
-                    data = "[" + data + "]";
-
-                    JA = new JSONArray(data);
-                    JSONObject JO = (JSONObject) JA.get(0);
-
-                    singleParsed = "pair: " + JO.get("pair") + "\n" + "rate: " + JO.get("rate") + "\n";
-
-                    dataParsed = dataParsed != null ? dataParsed + singleParsed + "\n" : singleParsed + "\n";
+                    setSpecificRate();
+                    i++;
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         } else if (type == RATE) {
-            try {
-                data = getSpecificRate(); //Sets String data to the rate between two currencies returned by getSpecificRate
-
-                data = "[" + data + "]";
-
-                JA = new JSONArray(data); //Set the JA JSONArray to the contents of the data variable
-                JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
-
-                singleParsed = "pair: " + JO.get("pair") + "\n" + "rate: " + JO.get("rate") + "\n"; //Parse the data of the object
-
-                dataParsed = dataParsed != null ? dataParsed + singleParsed + "\n" : singleParsed + "\n";
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            setSpecificRate();
         }
     }
 
-    private String getSpecificRate() {
+    private void setSpecificRate() {
         String line;
-
         if (data != null) data = null;
 
         BufferedReader urlReader = setUpWebComponents(url);
@@ -86,8 +69,18 @@ class Internet {
                 }
             }
         }
+        data = "[" + data + "]";
 
-        return data;
+        try {
+            JSONArray JA = new JSONArray(data);
+            JSONObject JO = (JSONObject) JA.get(0); //Set the JO JSONObject equal to the contents of the first index of JA
+
+            String singleParsed = "pair: " + JO.get("pair") + "\n" + "rate: " + JO.get("rate") + "\n";
+            dataParsed = dataParsed != null ? dataParsed + singleParsed + "\n" : singleParsed + "\n";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //return data;
     }
 
     BufferedReader setUpWebComponents(URL url) {
