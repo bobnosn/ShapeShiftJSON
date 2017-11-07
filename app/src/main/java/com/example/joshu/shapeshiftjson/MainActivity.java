@@ -21,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
     Spinner currencyIn, currencyOut; //Holds all possible coins after being populated by button populateButton
     Context uiContext; //Context of this (User Interface)
     ToggleButton favorite;
-    SharedPreferences sharedPref;
+    static SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
+    FavoriteCoinRates_Background getFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         currencyOut = (Spinner) findViewById(R.id.currencyOut);
 
         favorite = (ToggleButton) findViewById(R.id.favoriteToggleButton);
+
+        getFavorites = new FavoriteCoinRates_Background(MainActivity.this);
+        getFavorites.execute();
 
         //Creates CurrencySpinnerListener object (the custom onItemSelectedListener for both spinners) and sets it
         CurrencySpinnerListener csl = new CurrencySpinnerListener(MainActivity.this);
